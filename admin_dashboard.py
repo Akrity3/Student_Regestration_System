@@ -4,7 +4,7 @@ from tkinter import *
 from customtkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
-
+from customtkinter import CTkImage
 
 
 # Initialize the main window:
@@ -26,8 +26,23 @@ ad_dashb_fr1.place(x=20,y=25)
 ad_dashb_fr3 =CTkFrame(root,fg_color="#2C87CF",bg_color="#0D336B",width=690,height=645,corner_radius=10)
 ad_dashb_fr3 .place(x=570,y=25)
 
+#inserting image in inner right frame:
+# Load the image
+img = Image.open("std_bg.png")
+
+# Resize the image if needed
+img = img.resize((1100, 1000))
+
+# Convert the image to CTkImage
+ctk_img = CTkImage(light_image=img, size=(700, 950))
+
+# Use CTkImage in the label
+img_lbl = CTkLabel(ad_dashb_fr3, image=ctk_img, text="  ")
+img_lbl.place(relheight=1, relwidth=1)
+
+
 #Label:
-ad_dash_lbl = CTkLabel(ad_dashb_fr1,text="ADMIN  DASHBOARD",text_color="#FFFFFF",fg_color="#2C87CF",font=("Times New Roman",35,"bold"))  #Label of title in top frame
+ad_dash_lbl = CTkLabel(ad_dashb_fr1,text="  ADMIN  DASHBOARD",text_color="#FFFFFF",fg_color="#2C87CF",font=("Times New Roman",35,"bold"))  #Label of title in top frame
 ad_dash_lbl.place(x=60,y=25)
 
 
