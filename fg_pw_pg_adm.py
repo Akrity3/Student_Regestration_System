@@ -88,7 +88,7 @@ adm_reset_pw_pg_entry2.place(x=60, y=200)
 adm_reset_pw_pg_entry3=CTkEntry(adm_reset_pw_pg_fr, corner_radius=7, height=35, width=250, border_width=0, fg_color="white", text_color="black",show="*",placeholder_text="new password")
 adm_reset_pw_pg_entry3.place(x=60, y=290)
 
-#Entry box foe Confirm Password
+#Entry box for Confirm Password
 
 adm_reset_pw_pg_entry4=CTkEntry(adm_reset_pw_pg_fr, corner_radius=7, height=35, width=250, border_width=0, fg_color="white", text_color="black",show="*",placeholder_text="confirm password")
 adm_reset_pw_pg_entry4.place(x=60, y=380)
