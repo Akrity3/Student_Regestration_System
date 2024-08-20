@@ -4,7 +4,7 @@ from tkinter import *
 from customtkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
-
+import sqlite3
 
  
 # Initialize the main window:
@@ -16,6 +16,71 @@ root._set_appearance_mode("light")
 
 adm_sign_fr = CTkFrame(root,fg_color="#FFFFFF")
 adm_sign_fr.place(relwidth = 1, relheight = 1)
+
+
+def back_hompg():  #function to open homepage when back button is clicked
+    # adm_sign_fr.place_forget()
+    # main()
+    
+    pass
+
+
+
+def adm_signup():   #Function to open security page after sigining up
+    
+    conn = sqlite3.connect('sms.db')   #creating database
+    c = conn.cursor()  #'cursor()' for executing the queries
+    c.execute("""
+              CREATE TABLE IF NOT EXISTS admin (
+                 first_name TEXT,
+                 last_name TEXT,
+                 email TEXT,
+                 phone_number INT,
+                 password TEXT
+                 sec_ans1 TEXT,
+                 sec_ans2 TEXT
+                 
+                 
+                  
+              )
+            
+              """)
+    
+    global adm_emails
+    c.execute("SELECT email FROM admin")
+    adm_emails = c.fetchall()
+    a=[]
+    
+    for email in adm_emails:
+    #saving the changes made in the database
+     a.append(email[0])
+    conn.commit()
+    conn.close()
+
+    #checking if the entry boxes are filled and entered the valid credentials
+    if f_nm_entry.get() == '' or l_nm_entry.get() == '' or email_entry.get() == '' or phn_n_entry.get() == '' or pw_entry.get() == '' or f_nm_entry.get() == 'firstname' or l_nm_entry.get() == 'lastname' or email_entry  .get() == 'example@gmail.com':
+            messagebox.showerror("Error", "Please fill all the required fields!")
+    elif (f_nm_entry.get()).isalpha() == False or (l_nm_entry.get()).isalpha() == False:
+           messagebox.showerror("Error", "Please enter valid first and last names!")    #show error for first and last names
+    elif '@gmail.com' not in email_entry.get() or len(email_entry.get()) <= 10 or ' ' in email_entry.get():
+            messagebox.showerror("Error", "Please enter a valid email address!")     #show error for email entry
+    elif len(phn_n_entry.get())!= 10 or phn_n_entry.get().isdigit()==False:
+            messagebox.showerror("Error", "Please enter valid phone number!")       #show error for phone entry
+    elif pw_entry.get() != cnf_pw_entry.get():     #Checking if password is same in password and confirm password entry
+            messagebox.showerror("Error", "Passwords do not match!")
+    elif len(pw_entry.get()) < 8 :
+            messagebox.showerror("Error", "Password should be at least 8 characters long!")
+    
+    else:
+            if email_entry.get() in a:
+                #show error
+                messagebox.showerror("Error", "Email already exists!")
+            else:
+               messagebox.showinfo("Sucessful sign up!"," Now you need to fill the security questions for future security,incase you forget your password by filling the questions . ")
+            #    adm_sign_fr.place_forget()
+            #    security_pg_frm()  
+            
+
 
 
 #to show password:
@@ -95,21 +160,27 @@ cnf_pw_lbl = CTkLabel(st_sign_fr2, text='Confirm Password', text_color='black', 
 cnf_pw_lbl.place(x=38, y=370)
  
 # Entry box:
+#First Name
 f_nm_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=190, border_width=0, fg_color="white", text_color="black")
 f_nm_entry.place(x=38, y=115)
  
+#Last Name
 l_nm_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=190, border_width=0, fg_color="white", text_color="black")
 l_nm_entry.place(x=265, y=115)
  
+#Email
 email_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=420, border_width=0, fg_color="white", text_color="black")
 email_entry.place(x=38, y=185)
  
+#Phone Number
 phn_n_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=420, border_width=0, fg_color="white", text_color="black")
 phn_n_entry.place(x=38, y=255)
  
+#Password
 pw_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=340, border_width=0, fg_color="white", text_color="black", show='*')  #showpassword
 pw_entry.place(x=38, y=325)
  
+#Confirm Password
 cnf_pw_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=340, border_width=0, fg_color="white", text_color="black", show='*') #showpassword
 cnf_pw_entry.place(x=38, y=395)
 
@@ -124,17 +195,17 @@ varr = IntVar()
 pw_c_btn = Checkbutton(st_sign_fr2, text = 'Show',font=("Times New Roman",18,"bold"),activebackground="#1C5FA8",variable = varr,bg="#1C5FA8",  command = confirm_pass) #for confirm password
 pw_c_btn.place(x=590,y=595)
 
-# Back To Login Button: 
-ads_back_btn = CTkButton(st_sign_fr2,text="Back To LogIn",font=("Times New Roman",18,"bold"),text_color="white",bg_color="#1C5FA8",fg_color="#001437",width=200,height=40,corner_radius=16)
-ads_back_btn.place(x=38,y=445)
+# # Back To Login Button: 
+# ads_back_btn = CTkButton(st_sign_fr2,text="Back To LogIn",font=("Times New Roman",18,"bold"),text_color="white",bg_color="#1C5FA8",fg_color="#001437",width=200,height=40,corner_radius=16)
+# ads_back_btn.place(x=38,y=445)
  
 #Signup Button:
-ads_sign_btn = CTkButton(st_sign_fr2,text="SIGN UP",font=("Times New Roman",18,"bold"),text_color="white",bg_color="#1C5FA8",fg_color="#001437",corner_radius=16,width=200,height=40)
-ads_sign_btn.place(x=270,y=445)
+ads_sign_btn = CTkButton(st_sign_fr2,text="SIGN UP",font=("Times New Roman",18,"bold"),text_color="white",bg_color="#1C5FA8",fg_color="#001437",corner_radius=16,width=200,height=40,command=adm_signup)
+ads_sign_btn.place(x=150,y=445)
 
 
 #back to homepage button:
-st_back_btn = CTkButton(adm_sign_fr,text="BACK",font=("Times New Roman",19),text_color="#001535",fg_color="#F1BC60",hover_color="#F5A417",width=75,height=25,corner_radius=7) #back to homepage 
+st_back_btn = CTkButton(adm_sign_fr,text="BACK",font=("Times New Roman",19),text_color="#001535",fg_color="#F1BC60",hover_color="#F5A417",width=75,height=25,corner_radius=7,command=back_hompg) #back to homepage 
 st_back_btn.place(x=1190,y=75)
 
 
