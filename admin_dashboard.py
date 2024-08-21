@@ -7,6 +7,19 @@ from PIL import Image, ImageTk
 from customtkinter import CTkImage
 
 
+# def checking():
+#  if cpw_etr.get() == '' or npw_etr.get() == '' or asec_entry3.get() == '':
+#             tk.messagebox.showerror("Error","All fields are required.")
+#  elif (cpw_etr.get()).isdigit() == False:
+#             tk.messagebox.showerror("Error","Entered value must be a number.")
+#  if cpw_etr.get() == admin_data[4] and npw_etr.get() == admin_data[5] and asec_entry3.get() == admin_data[6]:
+#             global ulogin_etr2,areset_pass_frame,alogin_etr1,alogin_etr2,areset_pass_main_frame
+#             asign_sec_qsn_frame.place_forget()
+# pass
+
+
+
+
 # Initialize the main window:
 root = CTk()
 root.geometry('1920x1080+0+0')
@@ -18,24 +31,41 @@ root._set_appearance_mode("light")
 ad_dashb_fr = CTkFrame(root,fg_color="#0D336B")
 ad_dashb_fr.place(relwidth = 1, relheight = 1,relx=0,rely=0)
 
-#Left Top Frame:
+    # def programm_cancel(): #logout button
+        
+        
+        
+        
+    #     pass
+    
+    # def student_rcd():   #student records
+        
+        
+        
+    #     pass
+
+    
+    # def cng_pass(): #change password
+    #     ad_dashb_fr.place_forget
+    #     change_password
+    #     pass
+    
+
+    #Left Top Frame:
 ad_dashb_fr1 = CTkFrame(root,fg_color="#2C87CF",bg_color="#0D336B",width=530, height=100,corner_radius=10)
 ad_dashb_fr1.place(x=20,y=25)
 
-#Right Frame:
+    #Right Frame:
 ad_dashb_fr3 =CTkFrame(root,fg_color="#2C87CF",bg_color="#0D336B",width=690,height=645,corner_radius=10)
 ad_dashb_fr3 .place(x=570,y=25)
 
 #inserting image in inner right frame:
 # Load the image
 img = Image.open("std_bg.png")
-
 # Resize the image if needed
 img = img.resize((1100, 1000))
-
 # Convert the image to CTkImage
 ctk_img = CTkImage(light_image=img, size=(700, 950))
-
 # Use CTkImage in the label
 img_lbl = CTkLabel(ad_dashb_fr3, image=ctk_img, text="  ")
 img_lbl.place(relheight=1, relwidth=1)
@@ -53,21 +83,17 @@ ad_dashb_fr2.place(x=20,y=145)
 #Button:
 
 std_rd_btn = CTkButton(ad_dashb_fr2,hover_color="#0D336B",fg_color="#0D3380",text=" Student Records ",font=("Times New Roman", 20, "bold"),bg_color="#2C87CF",width=400,height=50,corner_radius=10) #Student records button 
-std_rd_btn.place(x=60,y=35)
+std_rd_btn.place(x=60,y=100)
 
-my_crs_btn = CTkButton(ad_dashb_fr2,hover_color="#0D336B",fg_color="#0D3380",text=" My Courses ",font=("Times New Roman", 20, "bold"),bg_color="#2C87CF",width=400,height=50,corner_radius=10) #My Courses button 
-my_crs_btn.place(x=60,y=120)
 
-ntc_brd_btn = CTkButton(ad_dashb_fr2,hover_color="#0D336B",fg_color="#0D3380",text=" Notice Board ",font=("Times New Roman", 20, "bold"),bg_color="#2C87CF",width=400,height=50,corner_radius=10) #Notice Board button 
-ntc_brd_btn.place(x=60,y=210)
-
-cng_pw_btn = CTkButton(ad_dashb_fr2,hover_color="#0D336B",fg_color="#0D3380",text=" Change Password ",font=("Times New Roman", 20, "bold"),bg_color="#2C87CF",width=400,height=50,corner_radius=10) #Change Password button 
+cng_pw_btn = CTkButton(ad_dashb_fr2,hover_color="#0D336B",fg_color="#0D3380",text=" Change Password ",font=("Times New Roman", 20, "bold"),bg_color="#2C87CF",width=400,height=50,corner_radius=10)    #,command=cng_pass) #Change Password button 
 cng_pw_btn.place(x=60,y=300)
 
 
 #logOutButton:
-crs_fr1_btn = CTkButton(ad_dashb_fr2, text='LogOut',font=("Times New Roman",19,"bold") ,text_color='#000000',fg_color="#F1BC60", bg_color='#2C87CF',width=130,height=45,hover_color="#E49C1F", corner_radius=10) #LogOut button
+crs_fr1_btn = CTkButton(ad_dashb_fr2, text='LogOut',font=("Times New Roman",19,"bold") ,text_color='#000000',fg_color="#F1BC60", bg_color='#2C87CF',width=130,height=45,hover_color="#E49C1F", corner_radius=10)   #,command=programm_cancel) #LogOut button
 crs_fr1_btn.place(x=195, y=420)
+
 
 
 

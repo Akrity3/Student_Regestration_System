@@ -4,6 +4,7 @@ from tkinter import *
 from customtkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
+import sqlite3
  
  
 # Initialize the main window
@@ -24,19 +25,46 @@ def show_pass():
         adl_pw_entry.configure(show = '')
     else:
         adl_pw_entry.configure(show = '*')
-        
-        
-#to check login credentials:
+            
+#message box is shown after clicking login butto
 def login_check():
-    email = adl_email_entry.get()
-    password = adl_pw_entry.get()
-    
-   
-    # Sample check for credentials (you can replace it with actual logic)
-    if email == "example@gmail.com" and password == "password":
-        messagebox.showinfo("Login Successful", "Welcome to The Grace Academy!")
-    else:
-        messagebox.showerror("Login Error", "Insufficient credentials")    
+  email=adl_email_entry.get()
+  password=adl_pw_entry.get()
+  #checking login credentials
+  if email == "" or password*6 == "":
+      messagebox.showerror("Error","Insufficient credentials")
+
+  else:
+      try: 
+          conn = sqlite3.connect("sms.db")   # Connect to the database (create if not exists)
+          c = conn.cursor()   
+
+          # Fetch the record with the matching email and password
+          c.execute("SELECT * FROM admin WHERE email = ? and password = ?", (adl_email_entry.get(), adl_pw_entry.get()))
+          result = c.fetchone()
+               
+          # Check if a result was found
+          if result is not None:
+          # Assuming the email is in the 3rd column and the password in the 4th column 
+           global a_email, a_password
+           if adl_email_entry.get() == result[2] and adl_pw_entry.get() == result[3]:
+                        u_email = adl_email_entry.get()
+                        u_password = adl_pw_entry.get()
+                        messagebox.showinfo("Successful Message", "Login Successful!")
+                        # adm_login_fr.place_forget()
+                        # admin_dashboard()     
+           else:
+               messagebox.showerror("Error", "Invalid email or password.")
+          else:
+             messagebox.showerror("Error", "Invalid email or password.")
+      
+      except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {str(e)}")
+        
+      finally:
+          conn.commit()   # Commit changes and close connection
+          conn.close()
+login_check()
 
 
 #ad_log_fr1: for heading

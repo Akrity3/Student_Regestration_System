@@ -39,8 +39,7 @@ def adm_signup():   #Function to open security page after sigining up
                  password TEXT
                  sec_ans1 TEXT,
                  sec_ans2 TEXT
-                 
-                 
+                                
                   
               )
             
@@ -49,20 +48,19 @@ def adm_signup():   #Function to open security page after sigining up
     global adm_emails
     c.execute("SELECT email FROM admin")
     adm_emails = c.fetchall()
-    a=[]
-    
+    a=[]    
     for email in adm_emails:
     #saving the changes made in the database
      a.append(email[0])
     conn.commit()
-    conn.close()
+    
 
     #checking if the entry boxes are filled and entered the valid credentials
     if f_nm_entry.get() == '' or l_nm_entry.get() == '' or email_entry.get() == '' or phn_n_entry.get() == '' or pw_entry.get() == '' or f_nm_entry.get() == 'firstname' or l_nm_entry.get() == 'lastname' or email_entry  .get() == 'example@gmail.com':
             messagebox.showerror("Error", "Please fill all the required fields!")
     elif (f_nm_entry.get()).isalpha() == False or (l_nm_entry.get()).isalpha() == False:
            messagebox.showerror("Error", "Please enter valid first and last names!")    #show error for first and last names
-    elif '@gmail.com' not in email_entry.get() or len(email_entry.get()) <= 10 or ' ' in email_entry.get():
+    elif '@gmail.com.admin' not in email_entry.get() or len(email_entry.get()) <= 10 or ' ' in email_entry.get():
             messagebox.showerror("Error", "Please enter a valid email address!")     #show error for email entry
     elif len(phn_n_entry.get())!= 10 or phn_n_entry.get().isdigit()==False:
             messagebox.showerror("Error", "Please enter valid phone number!")       #show error for phone entry
@@ -79,7 +77,7 @@ def adm_signup():   #Function to open security page after sigining up
                messagebox.showinfo("Sucessful sign up!"," Now you need to fill the security questions for future security,incase you forget your password by filling the questions . ")
             #    adm_sign_fr.place_forget()
             #    security_pg_frm()  
-            
+    conn.close()            
 
 
 
@@ -161,19 +159,19 @@ cnf_pw_lbl.place(x=38, y=370)
  
 # Entry box:
 #First Name
-f_nm_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=190, border_width=0, fg_color="white", text_color="black")
+f_nm_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=190, border_width=0, fg_color="white", text_color="black",placeholder_text="firstname")
 f_nm_entry.place(x=38, y=115)
  
 #Last Name
-l_nm_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=190, border_width=0, fg_color="white", text_color="black")
+l_nm_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=190, border_width=0, fg_color="white", text_color="black",placeholder_text="lastname")
 l_nm_entry.place(x=265, y=115)
  
 #Email
-email_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=420, border_width=0, fg_color="white", text_color="black")
+email_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=420, border_width=0, fg_color="white", text_color="black",placeholder_text="email")
 email_entry.place(x=38, y=185)
  
 #Phone Number
-phn_n_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=420, border_width=0, fg_color="white", text_color="black")
+phn_n_entry = CTkEntry(st_sign_fr2, corner_radius=7, height=35, width=420, border_width=0, fg_color="white", text_color="black",placeholder_text="phone number")
 phn_n_entry.place(x=38, y=255)
  
 #Password

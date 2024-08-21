@@ -28,23 +28,12 @@ label.image = reset_pw_bg_imgtk
 label.place(relheight=1,relwidth=1)
 
 
-#to show password:
+#to show or hide password:
 def new_pass():
-    if reset_pw_pg_entry3.cget("show") == "*":
-        reset_pw_pg_entry3.configure(show = '')
-    else:
-        reset_pw_pg_entry3.configure(show = '*')
-
-#to show confirm_pass:
-def confirm_pass():
     if reset_pw_pg_entry4.cget("show") == "*":
         reset_pw_pg_entry4.configure(show = '')
     else:
         reset_pw_pg_entry4.configure(show = '*')
-
-
-
-
 
 
 #Frame for labels:
@@ -54,6 +43,10 @@ reset_pw_pg_fr.place(x=650, y=100)
 #Heading:
 reset_pw_pg_label1=CTkLabel(reset_pw_pg_fr,text='  Reset Your Password',font=("Times New Roman",40,"bold"),text_color="#FFFFFF")
 reset_pw_pg_label1.place(x=20, y=10)
+
+#Label for Email 
+reset_email=CTkLabel(reset_pw_pg_fr,text='Email',font=("Times New Roman",20),text_color="#FFFFFF")
+reset_email.place(x=60, y=255)
 
 #Label for question no. 1
 reset_pw_pg_label2=CTkLabel(reset_pw_pg_fr,text='1.What is your favourite colour?',font=("Times New Roman",20),text_color="#FFFFFF")
@@ -65,11 +58,7 @@ reset_pw_pg_label3.place(x=60, y=165)
 
 #Label for New Password
 reset_pw_pg_label4=CTkLabel(reset_pw_pg_fr,text='New Password',font=("Times New Roman",20),text_color="#FFFFFF")
-reset_pw_pg_label4.place(x=60, y=255)
-
-#Label for Confirm Password
-reset_pw_pg_label5=CTkLabel(reset_pw_pg_fr,text='Confirm Password',font=("Times New Roman",20),text_color="#FFFFFF")
-reset_pw_pg_label5.place(x=60, y=345)
+reset_pw_pg_label4.place(x=60, y=345)
 
 #Entry box for question no 1
 reset_pw_pg_entry1=CTkEntry(reset_pw_pg_fr, corner_radius=7, height=35, width=320, border_width=0, fg_color="white", text_color="black")
@@ -79,25 +68,25 @@ reset_pw_pg_entry1.place(x=60, y=110)
 reset_pw_pg_entry2=CTkEntry(reset_pw_pg_fr, corner_radius=7, height=35, width=320, border_width=0, fg_color="white", text_color="black")
 reset_pw_pg_entry2.place(x=60, y=200)
 
-#Entry box for new password
-reset_pw_pg_entry3=CTkEntry(reset_pw_pg_fr, corner_radius=7, height=35, width=250, border_width=0, fg_color="white", text_color="black",show="*",placeholder_text="new password")
+#Entry box for email
+reset_pw_pg_entry3=CTkEntry(reset_pw_pg_fr, corner_radius=7, height=35, width=320, border_width=0, fg_color="white", text_color="black",show="*",placeholder_text="Email")
 reset_pw_pg_entry3.place(x=60, y=290)
 
-#Entry box foe Confirm Password
-reset_pw_pg_entry4=CTkEntry(reset_pw_pg_fr, corner_radius=7, height=35, width=250, border_width=0, fg_color="white", text_color="black",show="*",placeholder_text="confirm password")
+#Entry box for New Password
+reset_pw_pg_entry4=CTkEntry(reset_pw_pg_fr, corner_radius=7, height=35, width=250, border_width=0, fg_color="white", text_color="black",show="*",placeholder_text="New password")
 reset_pw_pg_entry4.place(x=60, y=380)
 
 
  
 #CheckButton:
-var1 = IntVar()
-pw_c_btn = Checkbutton(reset_pw_pg_fr, text = 'Show',font=("Times New Roman",18,"bold"),activebackground="#000D18",variable = var1,bg="#000D18",  command = new_pass)  #for new password
-pw_c_btn.place(x=480,y=440)
-
-var2 = IntVar()
-pw_c_btn = Checkbutton(reset_pw_pg_fr, text = 'Show',font=("Times New Roman",18,"bold"),activebackground="#000D18",variable = var2,bg="#000D18",  command = confirm_pass) #for confirm password
+var1= IntVar()
+pw_c_btn = Checkbutton(reset_pw_pg_fr, text = 'Show',font=("Times New Roman",18,"bold"),activebackground="#000D18",variable = var1,bg="#000D18",  command = new_pass) #for confirm password
 pw_c_btn.place(x=480,y=575)
 
+
+#Submit Button
+fp_pg_btn=CTkButton(reset_pw_pg_fr,hover_color="#002234",fg_color="#004367",text="Submit",font=("Times New Roman",20,"bold"),bg_color="#000D18",width=100,height=30,corner_radius=10)
+fp_pg_btn.place(x=170, y=440)
 
  
  

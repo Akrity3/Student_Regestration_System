@@ -22,15 +22,15 @@ bg_image = Image.open("homepage_bg.png")
 bg_image=bg_image.resize((1920,1060))
 bg_imagetk=ImageTk.PhotoImage(bg_image)
 label=Label(main_frame,width=x,height=y,image=bg_imagetk)
-label.image = bg_imagetk
 label.place(relheight=1,relwidth=1)
+label.image = bg_imagetk
 
 #Frame: For Buttons:
 frame1=CTkFrame(main_frame,fg_color='#99D2DC',bg_color="#ADDEE9",height=390,width=400,corner_radius=20)
 frame1.place(x=440,y=180)
 
 #Frame: For heading
-frame2=Frame(main_frame,background='#008EAF',height=150,width=600)
+frame2=Frame(main_frame,background='#008EAF',height=170,width=600)
 frame2.place(x=660, y=230)
 
 #For heading:
@@ -41,17 +41,11 @@ motto=Label(frame2, text='"A Legacy of Grace, A Future of Success."', fg='#FFD49
 motto.place(x=60,y=85)
 
 #For Buttons:
-Admin_SignUp=CTkButton(frame1, text='Admin SignUp ',font=('Times New Roman',35,"bold"),text_color="#0B4B5D",fg_color="#F1BC60",corner_radius=25,hover_color="#F3EBB7")
-Admin_SignUp=Admin_SignUp.place(x=65,y=100)
+Admin_SignUp=CTkButton(frame1, text='Admin SignUp ',font=('Times New Roman',35,"bold"),text_color="#0B4B5D",fg_color="#F1BC60",corner_radius=25,hover_color="#F3EBB7",width=300,height=40)
+Admin_SignUp=Admin_SignUp.place(x=50,y=160)
 
-Student_SignUp=CTkButton(frame1, text='Student SignUp',font=('Times New Roman',35,"bold"),text_color="#0B4B5D",fg_color="#F1BC60",corner_radius=25,hover_color="#F3EBB7")
-Student_SignUp=Student_SignUp.place(x=65,y=170)
-
-Admin_LogIn=CTkButton(frame1, text='  Admin LogIn  ',font=('Times New Roman',35,"bold"),text_color="#0B4B5D",fg_color="#F1BC60",corner_radius=25,hover_color="#F3EBB7")
-Admin_LogIn=Admin_LogIn.place(x=65,y=240)
-
-Student_LogIn=CTkButton(frame1, text=' Student LogIn  ',font=('Times New Roman',35,"bold"),text_color="#0B4B5D",fg_color="#F1BC60",corner_radius=25,hover_color="#F3EBB7")
-Student_LogIn=Student_LogIn.place(x=65,y=310)
+Admin_LogIn=CTkButton(frame1, text=' Admin LogIn  ',font=('Times New Roman',35,"bold"),text_color="#0B4B5D",fg_color="#F1BC60",corner_radius=25,hover_color="#F3EBB7",width=300,height=40)
+Admin_LogIn=Admin_LogIn.place(x=50,y=260)
 
 
 root.mainloop()

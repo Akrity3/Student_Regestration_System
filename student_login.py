@@ -20,7 +20,7 @@ stu_login_fr = CTkFrame(root,fg_color="#FFFFFF")
 stu_login_fr.place(relwidth = 1, relheight = 1)
 
 
-#To show password:
+#To hide or show password:
 def show_pass():
     if password_entry.cget("show") == "*":
         password_entry.configure(show = '')

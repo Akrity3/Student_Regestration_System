@@ -4,6 +4,7 @@ from tkinter import *
 from customtkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
+import sqlite3
 
 # Initialize the main window:
 root = CTk()
@@ -18,6 +19,66 @@ y=root.winfo_screenheight()
 
 security_pg_frm=CTkFrame(root,fg_color="#FFFFFF")
 security_pg_frm.place(relwidth = 1, relheight = 1)
+
+
+def sec_ans_check():
+        #this function is made to show a message when user clicks submit on the security question page
+
+        #----------------------------DATABASE--------------------------#
+ 
+        #checking if the entry is filled or not
+
+        if security_pg_entry1.get() == '' or security_pg_entry2.get() == '':
+
+           messagebox.showerror("Error", "Please fill all the required fields!")
+
+        elif security_pg_entry1.get().isdigit() == False:
+
+            messagebox.showerror("Error", "Please enter a number in the first field!")
+
+        else:
+ 
+           #inserting security answers to the database
+
+            conn = sqlite3.connect("mealmate.db")
+
+            c = conn.cursor()
+
+            #updating security questions
+
+            #inserting data into the database
+
+            c.execute('''INSERT INTO user (first_name, last_name, email, password, sec_ans1, sec_ans2, sec_ans3) 
+
+                         VALUES (?,?,?,?,?,?,?)''',
+
+                         ((security_pg_entry1.get()).capitalize(),(security_pg_entry2.get()).capitalize(),security_pg_entry1.get(), security_pg_entry2.get())
+
+                     )
+
+            conn.commit()
+            conn.close()
+
+            # security_pg_frm.place_forget()  
+            # admin_login()       
+
+            messagebox.showinfo("Successful Message ","Security questions Entry Successful !")
+
+ 
+    
+    
+    
+
+pass
+
+
+#this message is pop when user clicks on submit button
+def sec_submit():
+    # security_pg_frm.destroy()
+    messagebox.showinfo("Successful Message ","Security questions Entry Successful !")
+    # import admin_login
+    pass
+
 
 #importing image:
 security_pg_bg = Image.open("Security_page_bg.png")
@@ -58,7 +119,7 @@ security_pg_entry2.place(x=70, y=230)
 
 #Submit Button
 
-security_pg_btn=CTkButton(security_pg_label_fr,hover_color="#002234",fg_color="#004367",text="Submit",font=("Times New Roman",20,"bold"),bg_color="#000D18",width=100,height=30,corner_radius=10)
+security_pg_btn=CTkButton(security_pg_label_fr,hover_color="#002234",fg_color="#004367",text="Submit",font=("Times New Roman",20,"bold"),bg_color="#000D18",width=100,height=30,corner_radius=10,command=sec_submit)
 security_pg_btn.place(x=170, y=300)
 
 
