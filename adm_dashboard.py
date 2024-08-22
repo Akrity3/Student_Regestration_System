@@ -6,49 +6,16 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 from customtkinter import CTkImage
 
-
-# def checking():
-#  if cpw_etr.get() == '' or npw_etr.get() == '' or asec_entry3.get() == '':
-#             tk.messagebox.showerror("Error","All fields are required.")
-#  elif (cpw_etr.get()).isdigit() == False:
-#             tk.messagebox.showerror("Error","Entered value must be a number.")
-#  if cpw_etr.get() == admin_data[4] and npw_etr.get() == admin_data[5] and asec_entry3.get() == admin_data[6]:
-#             global ulogin_etr2,areset_pass_frame,alogin_etr1,alogin_etr2,areset_pass_main_frame
-#             asign_sec_qsn_frame.place_forget()
-# pass
-
-
-
-
 # Initialize the main window:
 root = CTk()
 root.geometry('1920x1080+0+0')
-root.title('Student Management System')
+root.title('Student Registration System')
 root.iconbitmap("logo.ico")
 root._set_appearance_mode("light")
 
 #adding mainframe:
 ad_dashb_fr = CTkFrame(root,fg_color="#0D336B")
 ad_dashb_fr.place(relwidth = 1, relheight = 1,relx=0,rely=0)
-
-    # def programm_cancel(): #logout button
-        
-        
-        
-        
-    #     pass
-    
-    # def student_rcd():   #student records
-        
-        
-        
-    #     pass
-
-    
-    # def cng_pass(): #change password
-    #     ad_dashb_fr.place_forget
-    #     change_password
-    #     pass
     
 
     #Left Top Frame:
@@ -93,14 +60,6 @@ cng_pw_btn.place(x=60,y=300)
 #logOutButton:
 crs_fr1_btn = CTkButton(ad_dashb_fr2, text='LogOut',font=("Times New Roman",19,"bold") ,text_color='#000000',fg_color="#F1BC60", bg_color='#2C87CF',width=130,height=45,hover_color="#E49C1F", corner_radius=10)   #,command=programm_cancel) #LogOut button
 crs_fr1_btn.place(x=195, y=420)
-
-
-
-
-
-
-
-
 
 
 

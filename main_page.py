@@ -1,5 +1,5 @@
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Main Page~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Main Page~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 from tkinter import *
 from customtkinter import *
 from tkinter import messagebox
@@ -7,11 +7,12 @@ from PIL import Image, ImageTk
 from tkinter import ttk
 import sqlite3
 from customtkinter import CTkImage
+from customtkinter import CTk, CTkFrame, CTkLabel, CTkButton, CTkEntry
 
 # Initialize the main window
 root = CTk()
 root.geometry('1920x1080+0+0')
-root.title('Student Regestration System')
+root.title('Student Registration System')
 root.iconbitmap("logo.ico")
 
 #getting screen size and with:
@@ -20,7 +21,7 @@ y=root.winfo_screenheight()
 
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Admin_Signup~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Admin_Signup~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 """
    Function for Admin signup frame 
    
@@ -83,7 +84,7 @@ def admin_signup():
                 else:
                     messagebox.showinfo("Sucessful sign up!"," Now you need to fill the security questions for future security,incase you forget your password by filling the questions . ")
                     adm_sign_fr.place_forget()
-                    Security_page()  
+                    security_page()  
         conn.close()            
 
 
@@ -223,7 +224,7 @@ pass
 
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Admin_LogIn~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Admin_LogIn~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 def admin_login():
     """" ADMIN LOGIN """
@@ -256,7 +257,7 @@ def admin_login():
     #to check login credentials:
     def login_check():
         email = adl_email_entry.get()
-        password = adl_pw_entry.get()##################################################################################################################################3
+        password = adl_pw_entry.get()
         conn=sqlite3.connect("sms.db")
         c=conn.cursor()
         c.execute("SELECT password FROM admin WHERE email=? ",[email])
@@ -318,7 +319,7 @@ def admin_login():
     
     #Adding labels: In adm_log_fr3
     #labels:
-    ad_login_lbl1=CTkLabel(adm_log_fr3,text='  ADMIN LOGIN',bg_color="#1C5FA8",fg_color='#1C5FA8', font=("Times New Roman",35,"bold"))
+    ad_login_lbl1=CTkLabel(adm_log_fr3,text='  ADMIN LOGIN',bg_color="#1C5FA8",fg_color='#1C5FA8', font=("Times New Roman",35,"bold"),text_color="#FFFFFF")
     ad_login_lbl1.place(x=120,y=10)
 
     ad_login_lbl2=Label(adm_log_fr3,text='Email',fg='#000000',bg='#1C5FA8', font=("Times New Roman",19,"bold"))
@@ -365,8 +366,8 @@ def admin_login():
     
     
     
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Security_Page~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def Security_page():
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Security_Page~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+def security_page():
     """
        Function to create a security page
        """
@@ -413,7 +414,7 @@ def Security_page():
             security_pg_frm.place_forget()  
             admin_login()       
 
-            messagebox.showinfo("Successful Message ","Security questions Entry Successful !")
+            messagebox.showinfo("Successful Message ","Security questions Entry Successful ! Now you can login using entered email and password.")
 
     pass
 
@@ -459,10 +460,10 @@ def Security_page():
     
     
     
-    Security_page()
+    pass
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Reset_Password~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Reset_Password~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 def reset_pw_page():
     """
@@ -485,33 +486,36 @@ def reset_pw_page():
         
       
     """this function opens the reset password page when called."""  
+  
+             
+        
     def to_login():
-       #fetch user data from user table
-      conn = sqlite3.connect("sms.db")
-      c = conn.cursor()
-      c.execute("SELECT * FROM admin WHERE email = ?", (adl_email_entry.get(),))
-      admin = c.fetchone()
+            security1_qsn = reset_pw_pg_entry1.get()
+            security2_qns = reset_pw_pg_entry2.get()
+            email = reset_pw_pg_entry3.get()
+            new_password = reset_pw_pg_entry4.get()
         
-      if reset_pw_pg_entry1.get() == '' or reset_pw_pg_entry2.get() == '' or reset_pw_pg_entry3.get() == '' or reset_pw_pg_entry4.get() == '':
-            messagebox.showerror("Error","All fields are required.")
-      elif (reset_pw_pg_entry1.get() or reset_pw_pg_entry2.get()).isalpha() == False:
-            messagebox.showerror("Error","Entered a correct values in ENtry 1 and 2.")
-      elif len(reset_pw_pg_entry4.get()) <= 8 or ' ' in reset_pw_pg_entry4.get():  # Conditions for new password
-            messagebox.showerror("Error", "Please enter a valid email address!") 
-      if reset_pw_pg_entry1.get() == admin[5] and reset_pw_pg_entry2.get() == admin[6] and reset_pw_pg_entry3.get() == admin[2]:
-            
-        
-        
-        
-        
-        
-        
-          reset_pw_pg_frm.place_forget()
-          admin_login()
+            if all([security1_qsn, security2_qns, email,new_password]):
+                if len(new_password) >= 8:
+                    if new_password != security1_qsn or new_password !=security2_qns :
+                        try:
+                            with sqlite3.connect('sms.db') as conn:
+                                c = conn.cursor()
+                                c.execute("UPDATE admin SET password = ? WHERE email = ?", (new_password,email))
+                                conn.commit()
+                            messagebox.showinfo("Password Reset", f"Password reset successful for {email}")
+                            reset_pw_pg_frm.place_forget()
+                            admin_login()
+                        except sqlite3.Error as e:
+                            messagebox.showerror("Database Error", str(e))
+                    else:
+                        messagebox.showerror("Password Reset Error", "Password should not match.")
+                else:
+                    messagebox.showerror("Password Reset Error", "Passwords do not match or password is too short.")
+            else:
+                messagebox.showerror("Password Reset Error", "All fields must be filled.")
 
 
-
-    pass
 
     #to show or hide password:
     def new_pass():
@@ -554,7 +558,7 @@ def reset_pw_page():
     reset_pw_pg_entry2.place(x=60, y=200)
 
     #Entry box for email
-    reset_pw_pg_entry3=CTkEntry(reset_pw_pg_fr, corner_radius=7, height=35, width=320, border_width=0, fg_color="white", text_color="black",show="*",placeholder_text="Email")
+    reset_pw_pg_entry3=CTkEntry(reset_pw_pg_fr, corner_radius=7, height=35, width=320, border_width=0, fg_color="white", text_color="black",placeholder_text="Email")
     reset_pw_pg_entry3.place(x=60, y=290)
 
     #Entry box for New Password
@@ -578,8 +582,13 @@ def reset_pw_page():
     
     pass
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Admin_Dashboard~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Admin_Dashboard~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 def admin_dashboard():
+    """
+       function to open dashboard when called    
+    """
     
     
     global img
@@ -589,43 +598,33 @@ def admin_dashboard():
     
     def programm_cancel(): #logout button
         ad_dashb_fr.place_forget()
-        main()
-          
+        main() 
         pass
     
     def student_rcd():   #student records
         ad_dashb_fr.place_forget()
         student_records()
+        pass
+    
+    
         
-        pass
-    
-    
-   
-    
-    def cng_pass(): #change password
-        ad_dashb_fr.place_forget()
-        change_password()
-        pass
     
 
     #Left Top Frame:
-    ad_dashb_fr1 = CTkFrame(root,fg_color="#2C87CF",bg_color="#0D336B",width=530, height=100,corner_radius=10)
+    ad_dashb_fr1 = CTkFrame(ad_dashb_fr,fg_color="#2C87CF",bg_color="#0D336B",width=530, height=100,corner_radius=10)
     ad_dashb_fr1.place(x=20,y=25)
 
     #Right Frame:
-    ad_dashb_fr3 =CTkFrame(root,fg_color="#2C87CF",bg_color="#0D336B",width=690,height=645,corner_radius=10)
+    ad_dashb_fr3 =CTkFrame(ad_dashb_fr,fg_color="#2C87CF",bg_color="#0D336B",width=690,height=645,corner_radius=10)
     ad_dashb_fr3 .place(x=570,y=25)
 
     #inserting image in inner right frame:
     # Load the image
     img = Image.open("std_bg.png")
-
     # Resize the image if needed
     img = img.resize((1100, 1000))
-
     # Convert the image to CTkImage
     ctk_img = CTkImage(light_image=img, size=(700, 950))
-
     # Use CTkImage in the label
     img_lbl = CTkLabel(ad_dashb_fr3, image=ctk_img, text="  ")
     img_lbl.place(relheight=1, relwidth=1)
@@ -637,19 +636,19 @@ def admin_dashboard():
 
 
     #Left Bottom Frame:
-    ad_dashb_fr2 = CTkFrame(root,fg_color="#2C87CF",bg_color="#0D336B",width=530, height=525,corner_radius=10)
+    ad_dashb_fr2 = CTkFrame(ad_dashb_fr,fg_color="#2C87CF",bg_color="#0D336B",width=530, height=525,corner_radius=10)
     ad_dashb_fr2.place(x=20,y=145)
 
     #Button:
     std_rd_btn = CTkButton(ad_dashb_fr2,hover_color="#0D336B",fg_color="#0D3380",text=" Student Records ",font=("Times New Roman", 20, "bold"),bg_color="#2C87CF",width=400,height=50,corner_radius=10,command=student_rcd) #Student records button 
-    std_rd_btn.place(x=60,y=35)
+    std_rd_btn.place(x=60,y=95)
 
-    cng_pw_btn = CTkButton(ad_dashb_fr2,hover_color="#0D336B",fg_color="#0D3380",text=" Change Password ",font=("Times New Roman", 20, "bold"),bg_color="#2C87CF",width=400,height=50,corner_radius=10,command=cng_pass) #Change Password button 
-    cng_pw_btn.place(x=60,y=300)
+    cng_pw_btn = CTkButton(ad_dashb_fr2,hover_color="#0D336B",fg_color="#0D3380",text=" Change Password ",font=("Times New Roman", 20, "bold"),bg_color="#2C87CF",width=400,height=50,corner_radius=10,command = password_ch) #Change Password button 
+    cng_pw_btn.place(x=60,y=260)
 
     #logOutButton:
     crs_fr1_btn = CTkButton(ad_dashb_fr2, text='LogOut',font=("Times New Roman",19,"bold") ,text_color='#000000',fg_color="#F1BC60", bg_color='#2C87CF',width=130,height=45,hover_color="#E49C1F", corner_radius=10,command=programm_cancel) #LogOut button
-    crs_fr1_btn.place(x=195, y=420)
+    crs_fr1_btn.place(x=180, y=420)
 
 
     
@@ -661,21 +660,30 @@ def admin_dashboard():
 
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Student_Records~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Student_Records~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 def student_records():
     
     #mainFrame
-    sr_record_fr= CTkFrame(root,fg_color="#FFFFFF")
-    sr_record_fr.place(relwidth = 1, relheight = 1) 
     
-
+    # Adding main frame
+    std_record_fr = CTkFrame(root, fg_color="#0D336B")
+    std_record_fr.place(relwidth=1, relheight=1, relx=0, rely=0)
+    # sr_record_fr= CTkFrame(root,fg_color="#FFFFFF")
+    # sr_record_fr.place(relwidth = 1, relheight = 1) 
+    
+    
+    
+    def back_dashboard():
+        std_record_fr.place_forget()
+        admin_dashboard()
+        
     # Function to create the students table if it doesn't exist
     def create_students_table():
         conn = sqlite3.connect("sms.db")
         cursor = conn.cursor()
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS students (
-                Students_ID INT,
+                Students_ID INTEGER PRIMARY KEY,
                 Students_Name TEXT,
                 Date_Of_Birth TEXT,
                 Gender TEXT,
@@ -688,7 +696,6 @@ def student_records():
         conn.commit()
         conn.close()
     create_students_table()
-    
     # Function to handle submission and storing of student details
     def submit_details():
         Students_ID = std_id_etr.get()
@@ -700,12 +707,13 @@ def student_records():
         Guardians_Name = std_gN_etr.get()
         Address = std_adrs_etr.get()
     
+
         if '@gmail.com' not in Email:
             messagebox.showerror("Invalid Email", "Please enter a valid Email address.")
             return
     
-        if not Phone_Number.isdigit():
-            messagebox.showerror("Invalid Number", "Please enter a valid numeric phone number.")
+        if Phone_Number.isdigit()==False or len(Phone_Number) != 10:
+            messagebox.showerror("Invalid PhoneNumber", "Please enter a 10 digit phone number.")
             return
     
         conn = sqlite3.connect("sms.db")
@@ -714,13 +722,11 @@ def student_records():
         cursor.execute("""
         INSERT INTO students (Students_ID, Students_Name, Date_Of_Birth, Gender, Email, Phone_Number, Guardians_Name, Address)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """, 
-        (Students_ID, Students_Name, Date_Of_Birth, Gender, Email, Phone_Number, Guardians_Name, Address))
-        
+        """, (Students_ID, Students_Name, Date_Of_Birth, Gender, Email, Phone_Number, Guardians_Name, Address))
         conn.commit()
         conn.close()
     
-        clear_entries() 
+        clear_entries()
     
         messagebox.showinfo('Success', 'Student details added successfully!')
     
@@ -789,27 +795,27 @@ def student_records():
     
     # Populate the Treeview with data from the database
     def populate_student_table():
-        for row in student_table.get_children():
+        for row in student_table.get_children(): 
             student_table.delete(row)
         data = fetch_data_from_db()
         for record in data:
             student_table.insert('', 'end', values=record)
     
-
-    # Adding main frame
-    std_record_fr = CTkFrame(sr_record_fr, fg_color="#0D336B")
-    std_record_fr.place(relwidth=1, relheight=1, relx=0, rely=0)
-    
     # Top Frame
-    std_record_fr1 = CTkFrame(sr_record_fr, fg_color="#2C87CF", bg_color="#0D336B", width=1240, height=45, corner_radius=10)
+    std_record_fr1 = CTkFrame(std_record_fr, fg_color="#2C87CF", bg_color="#0D336B", width=1240, height=45, corner_radius=10)
     std_record_fr1.place(x=20, y=15)
     
+    #adding back button on top frame:
+    back_btnn =CTkButton(std_record_fr1,text="BACK",font=("Times New Roman",19),text_color="#001535",fg_color="#F1BC60",hover_color="#F5A417",width=75,height=25,corner_radius=7,command=back_dashboard) #back to admin dashboard 
+    back_btnn.place(x=1150,y=5)
+    
+
     # Left Frame
-    std_record_fr2 = CTkFrame(sr_record_fr, fg_color="#2C87CF", bg_color="#0D336B", width=529, height=600, corner_radius=10)
+    std_record_fr2 = CTkFrame(std_record_fr, fg_color="#2C87CF", bg_color="#0D336B", width=529, height=600, corner_radius=10)
     std_record_fr2.place(x=20, y=75)
     
     # Right Frame
-    std_record_fr3 = CTkFrame(sr_record_fr, fg_color="#2C87CF", bg_color="#0D336B", width=690, height=600, corner_radius=10)
+    std_record_fr3 = CTkFrame(std_record_fr, fg_color="#2C87CF", bg_color="#0D336B", width=690, height=600, corner_radius=10)
     std_record_fr3.place(x=570, y=75)
     
     # Inner Right Frame
@@ -820,60 +826,70 @@ def student_records():
     stdr_label_fr1 = CTkLabel(std_record_fr1, text='STUDENT RECORDS', text_color='#FFFFFF', font=("Times New Roman", 35, "bold"))
     stdr_label_fr1.place(x=440, y=0)
     
-    # Labels and Entries in left frame
-    std_id = CTkLabel(std_record_fr2, text="Student Id :", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
+    # Labels and Entries in left frame:
+    #Student Id
+    std_id = CTkLabel(std_record_fr2, text="Student Id :", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold")) 
     std_id.place(x=20, y=25)
     std_id_etr = CTkEntry(std_record_fr2, corner_radius=12, height=38, width=330, border_width=0, fg_color="white", text_color="black")
     std_id_etr.place(x=175, y=25)
     
-    std_name = CTkLabel(std_record_fr2, text="Student Name :", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
+    #Student Name
+    std_name = CTkLabel(std_record_fr2, text="Student Name:", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
     std_name.place(x=20, y=85)
     std_name_etr = CTkEntry(std_record_fr2, corner_radius=12, height=38, width=330, border_width=0, fg_color="white", text_color="black")
     std_name_etr.place(x=175, y=85)
     
-    std_DOB = CTkLabel(std_record_fr2, text="Date of Birth :", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
+    #Date of Birth
+    std_DOB = CTkLabel(std_record_fr2, text="Date of Birth:", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
     std_DOB.place(x=20, y=145)
     std_dob_etr = CTkEntry(std_record_fr2, corner_radius=12, height=38, width=330, border_width=0, fg_color="white", text_color="black")
     std_dob_etr.place(x=175, y=145)
     
-    std_gender = CTkLabel(std_record_fr2, text="Gender :", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
+    #Gender
+    std_gender = CTkLabel(std_record_fr2, text="Gender:", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
     std_gender.place(x=20, y=205)
     std_gender_etr = CTkEntry(std_record_fr2, corner_radius=12, height=38, width=330, border_width=0, fg_color="white", text_color="black")
     std_gender_etr.place(x=175, y=205)
     
-    std_email = CTkLabel(std_record_fr2, text="Email :", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
+    #Email Address
+    std_email = CTkLabel(std_record_fr2, text="Email:", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
     std_email.place(x=20, y=265)
     std_email_etr = CTkEntry(std_record_fr2, corner_radius=12, height=38, width=330, border_width=0, fg_color="white", text_color="black")
     std_email_etr.place(x=175, y=265)
     
-    std_phn_num = CTkLabel(std_record_fr2, text="Phone Number :", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
+    #Phone Number
+    std_phn_num = CTkLabel(std_record_fr2, text="Phone Number:", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
     std_phn_num.place(x=20, y=325)
     std_phnN_etr = CTkEntry(std_record_fr2, corner_radius=12, height=38, width=330, border_width=0, fg_color="white", text_color="black")
     std_phnN_etr.place(x=175, y=325)
     
-    std_guardians_nm = CTkLabel(std_record_fr2, text="Guardian's Name :", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
+    #Guardian Name
+    std_guardians_nm = CTkLabel(std_record_fr2, text="Guardian's Name:", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
     std_guardians_nm.place(x=20, y=385)
     std_gN_etr = CTkEntry(std_record_fr2, corner_radius=12, height=38, width=330, border_width=0, fg_color="white", text_color="black")
     std_gN_etr.place(x=175, y=385)
     
-    std_adrs = CTkLabel(std_record_fr2, text="Address :", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
+    #Address
+    std_adrs = CTkLabel(std_record_fr2, text="Address:", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
     std_adrs.place(x=20, y=445)
     std_adrs_etr = CTkEntry(std_record_fr2, corner_radius=12, height=38, width=330, border_width=0, fg_color="white", text_color="black")
     std_adrs_etr.place(x=175, y=445)
     
-    # Add, Update, Delete buttons in the left frame
+    # Buttons in the left frame:
+    #Add
     std_add_btn = CTkButton(std_record_fr2, width=130, height=32, text='ADD', corner_radius=10, font=("Times New Roman", 15, "bold"),text_color="#FFFFFF", fg_color="#0D336B", hover_color="orange", command=submit_details)
-    std_add_btn.place(x=25, y=515)
+    std_add_btn.place(x=25, y=530)
     
+    #Update
     std_update_btn = CTkButton(std_record_fr2, width=130, height=32, text='UPDATE', corner_radius=10, font=("Times New Roman", 15, "bold"),text_color="#FFFFFF", fg_color="#0D336B", hover_color="orange", command=update_data)
-    std_update_btn.place(x=195, y=515)
+    # std_update_btn.place(x=185, y=530)
     
+    #Delete
     std_delete_btn = CTkButton(std_record_fr2, width=130, height=32, text='DELETE', corner_radius=10, font=("Times New Roman", 15, "bold"),text_color="#FFFFFF", fg_color="#0D336B", hover_color="orange", command=delete_student)
-    std_delete_btn.place(x=365, y=515)
+    std_delete_btn.place(x=355, y=530)
     
     # Treeview in right frame to display student details
     student_table = ttk.Treeview(stdr_fr3_fr, columns=("id", "name", "dob", "gender", "email", "phone", "guardian", "address"), show='headings')
-
     student_table.heading('id', text="ID")
     student_table.heading('name', text="Name")
     student_table.heading('dob', text="DOB")
@@ -886,156 +902,66 @@ def student_records():
     
     # Call the function to populate the treeview with data
     populate_student_table()
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    pass
 
 
 
 
+    # Adding the Search Entry and Button in the Right Frame
+    search_label = CTkLabel(std_record_fr3, text="Search Student", text_color="#FFFFFF", fg_color="#2C87CF", font=("Times New Roman", 20, "bold"))
+    search_label.place(x=25, y=520)
+    
+    search_entry = CTkEntry(std_record_fr3, corner_radius=12, height=38, width=250, border_width=0, fg_color="white", text_color="black")
+    search_entry.place(x=180, y=520)
+
+    search_button = CTkButton(std_record_fr3, width=100, height=32, text='Search', corner_radius=10, font=("Times New Roman", 15, "bold"),text_color="#FFFFFF", fg_color="#0D336B", hover_color="orange", command=lambda: search_student(search_entry.get()))
+    search_button.place(x=460, y=520)
+
+    refresh_button = CTkButton(std_record_fr3, width=100, height=32, text='Refresh', corner_radius=10, font=("Times New Roman", 15, "bold"),text_color="#FFFFFF", fg_color="#0D336B", hover_color="orange", command=populate_student_table)
+    refresh_button.place(x=580, y=520)
+    
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Change_password_page~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def change_password():
-    
-    
-    #adding mainframe:
-    ad_dashb_fr = CTkFrame(root,fg_color="#0D336B")
-    ad_dashb_fr.place(relwidth = 1, relheight = 1,relx=0,rely=0)
-    conn = sqlite3.connect("sms.db")
-    c = conn.cursor()
-    
-
-
-    def current_pass():
-    
-        if cpw_etr.cget("show") == "*":
-            cpw_etr.configure(show = '')
-        else:
-            cpw_etr.configure(show = '*')
+    # Define the search function
+    def search_student(search_term):
+        for row in student_table.get_children():
+            student_table.delete(row)
         
-        pass
+        conn = sqlite3.connect('sms.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM students WHERE Students_Name LIKE ? OR Students_ID LIKE ?", ('%' + search_term + '%', '%' + search_term + '%'))
+        records = cursor.fetchall()
+        conn.close()
 
-    def new_pass():
-        if npw_etr.cget("show") == "*":
-            npw_etr.configure(show = '')
-        else:
-            npw_etr.configure(show = '*')
-        
-        pass
-
-    def confirm_pass():
-        if cn_pw_etr.cget("show") == "*":
-            cn_pw_etr.configure(show = '')
-        else:
-            cn_pw_etr.configure(show = '*')
-        
-        pass
-
-
-    #Left Top Frame:
-    ad_dashb_fr1 = CTkFrame(root,fg_color="#2C87CF",bg_color="#0D336B",width=530, height=100,corner_radius=10)
-    ad_dashb_fr1.place(x=20,y=25)
-
-    #Label:
-    ad_dash_lbl = CTkLabel(ad_dashb_fr1,text="ADMIN  DASHBOARD",text_color="#FFFFFF",fg_color="#2C87CF",font=("Times New Roman",35,"bold"))  #Label of title in top frame
-    ad_dash_lbl.place(x=60,y=25)
-
-
-    #Left Bottom Frame:
-    ad_dashb_fr2 = CTkFrame(root,fg_color="#2C87CF",bg_color="#0D336B",width=530, height=525,corner_radius=10)
-    ad_dashb_fr2.place(x=20,y=145)
-
-
-    #Button:
-
-    std_rd_btn = CTkButton(ad_dashb_fr2,hover_color="#0D336B",fg_color="#0D3380",text=" Student Records ",font=("Times New Roman", 20, "bold"),bg_color="#2C87CF",width=400,height=50,corner_radius=10) #Student records button 
-    std_rd_btn.place(x=60,y=35)
-
-    cng_pw_btn = CTkButton(ad_dashb_fr2,hover_color="#0D336B",fg_color="#0D3380",text=" Change Password ",font=("Times New Roman", 20, "bold"),bg_color="#2C87CF",width=400,height=50,corner_radius=10) #Student records button 
-    cng_pw_btn.place(x=60,y=300)
-
-
-    #logOutButton:
-    crs_fr1_btn = CTkButton(ad_dashb_fr2, text='LogOut',font=("Times New Roman",19,"bold") ,text_color='#000000',fg_color="#F1BC60", bg_color='#2C87CF',width=130,height=45,hover_color="#E49C1F", corner_radius=10) #LogOut button
-    crs_fr1_btn.place(x=195, y=420)
-
-
-    #Right Frame:
-    ad_dashb_fr3 =CTkFrame(ad_dashb_fr,fg_color="#2C87CF",bg_color="#0D336B",width=690,height=645,corner_radius=10)
-    ad_dashb_fr3 .place(x=570,y=25)
-
-    #Inner Right Frame:
-    ad_dashb_fr4 = CTkFrame(ad_dashb_fr3,fg_color="#0F56A2",bg_color="#2C87CF",width=400, height=500,corner_radius=2)
-    ad_dashb_fr4.place(x=160, y=80)
-
-    #Contains in inner right frame:
-
-    #adding label:
-    cng_pw_lbl = CTkLabel(ad_dashb_fr4,text="Change Password",text_color="white",font=("Times New Roman",25,"bold") ,fg_color="#0F56A2")
-    cng_pw_lbl.place(x=100,y=25)
-
-    cn_pw_lbl = CTkLabel(ad_dashb_fr4,text="Confirm Your New Password",text_color="white",font=("Times New Roman",16) ,fg_color="#0F56A2")
-    cn_pw_lbl.place(x=45,y=290)
-
-
-    #adding entry:
-    cpw_etr = CTkEntry(ad_dashb_fr4,corner_radius=12,height=38,width=240,border_width=0,fg_color="white",text_color="black",placeholder_text="Current Password",placeholder_text_color="grey",show="*")  
-    cpw_etr.place(x=45,y=150)
-
-    npw_etr = CTkEntry(ad_dashb_fr4,corner_radius=12,height=38,width=240,border_width=0,fg_color="white",text_color="black",placeholder_text="New Password",placeholder_text_color="grey", show='*')  
-    npw_etr.place(x=45,y=240)
-
-    cn_pw_etr = CTkEntry(ad_dashb_fr4,corner_radius=12,height=38,width=240,border_width=0,fg_color="white",text_color="black",placeholder_text="Type Your New Password",placeholder_text_color="grey", show='*')
-    cn_pw_etr.place(x=45,y=330)
-
-    #Button:
-    submit_btn = CTkButton(ad_dashb_fr4,hover_color="#0D336B",fg_color="#1792F3",text=" Submit ",font=("Times New Roman", 19, "bold"),bg_color="#0F56A2",width=100,height=40,corner_radius=9) #Submit button
-    submit_btn.place(x=140,y=420)
-
-    #CheckButtons:
-    var = IntVar()
-    new_pw_btn = Checkbutton(ad_dashb_fr4, text = 'Show',font=("Times New Roman",18,"bold"),activebackground="#0F56A2",variable = var,bg="#0F56A2",  command = current_pass)  #for current password
-    new_pw_btn.place(x=450,y=235)
-
-    varr = IntVar()
-    new_pw_btn = Checkbutton(ad_dashb_fr4, text = 'Show',font=("Times New Roman",18,"bold"),activebackground="#0F56A2",variable = varr,bg="#0F56A2",  command = new_pass)  #for new password
-    new_pw_btn.place(x=450,y=370)
-
-    varrr = IntVar()
-    Cnew_btn = Checkbutton(ad_dashb_fr4, text = 'Show',font=("Times New Roman",18,"bold"),activebackground="#0F56A2",variable = varrr,bg="#0F56A2",  command = confirm_pass) #to confirm new password
-    Cnew_btn.place(x=450,y=500)
-    
-    
-    
+        for record in records:
+            student_table.insert('', 'end', values=record)
+            
+            
+            
+            
+            
+            
+            
     
 
+
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Change_password_page~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+def password_ch():
+    import Admin_change_pw
     
-    pass
 
 
 
 
-
-
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Home_Page~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Home_Page~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 def main():
+    """
+    Homepage function 
+       
+    """
     
     global bg_image, main_frame
     main_frame = CTkFrame(root)
@@ -1057,18 +983,18 @@ def main():
     frame2=Frame(main_frame,background='#008EAF',height=170,width=600)
     frame2.place(x=660, y=230)
 
-    #For heading:
-    heading=Label(frame2, text='THE GRACE ACADEMY', fg='#FFD495', bg='#008EAF', font=("Times New Roman", 38,"bold"))
+    #Label heading:
+    heading=Label(frame2, text='THE GRACE ACADEMY', fg='#FFD495', bg='#008EAF', font=("Times New Roman", 38,"bold")) #main heading
     heading.place(x=5, y=5)
 
-    motto=Label(frame2, text='"A Legacy of Grace, A Future of Success."', fg='#FFD495', bg='#008EAF', font=("Brush Script MT", 25,"italic") )
+    motto=Label(frame2, text='"A Legacy of Grace, A Future of Success."', fg='#FFD495', bg='#008EAF', font=("Brush Script MT", 25,"italic") ) #moto
     motto.place(x=60,y=85)
 
     #For Buttons:
-    Admin_SignUp=CTkButton(frame1, text='Admin SignUp ',font=('Times New Roman',35,"bold"),text_color="#0B4B5D",fg_color="#F1BC60",corner_radius=25,hover_color="#F3EBB7",width=300,height=40,command=admin_signup)
+    Admin_SignUp=CTkButton(frame1, text='Admin SignUp ',font=('Times New Roman',35,"bold"),text_color="#0B4B5D",fg_color="#F1BC60",corner_radius=25,hover_color="#F3EBB7",width=300,height=40,command=admin_signup)  #admin signup button
     Admin_SignUp=Admin_SignUp.place(x=50,y=160)
 
-    Admin_LogIn=CTkButton(frame1, text=' Admin LogIn  ',font=('Times New Roman',35,"bold"),text_color="#0B4B5D",fg_color="#F1BC60",corner_radius=25,hover_color="#F3EBB7",width=300,height=40,command= admin_login)
+    Admin_LogIn=CTkButton(frame1, text=' Admin LogIn  ',font=('Times New Roman',35,"bold"),text_color="#0B4B5D",fg_color="#F1BC60",corner_radius=25,hover_color="#F3EBB7",width=300,height=40,command= admin_login) #admin login button
     Admin_LogIn=Admin_LogIn.place(x=50,y=260)
 
 
